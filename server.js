@@ -5,8 +5,11 @@ const winston = require('winston');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware to parse JSON bodies (limit set to 100kb, adjust as necessary)
-app.use(bodyParser.json({ limit: '100kb' }));
+// Middleware to parse URL-encoded bodies (for `application/x-www-form-urlencoded`)
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Middleware to parse JSON bodies (if you also receive JSON)
+app.use(express.json({ limit: '100kb' }));
 
 // Simple logging setup using winston
 const logger = winston.createLogger({
@@ -32,7 +35,7 @@ app.post('/pp-hosted/secure/webhook', (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
+const server = app.listen(port, () => {
   logger.info(`Server is listening on port ${port}`);
 });
 
